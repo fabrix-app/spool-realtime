@@ -1,0 +1,1 @@
+export { realtimeConfig } from './realtimeConfig'

@@ -9,6 +9,7 @@ defaults: &defaults
   working_directory: ~/fabrix
   docker:
     - image: circleci/node:10.0.0
+    - image: circleci/redis:5.0.0
 
 jobs:
   test:
