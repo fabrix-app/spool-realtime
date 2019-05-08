@@ -1,12 +1,12 @@
 /**
- * Trailpack Configuration
+ * Spool Configuration
  *
- * @see {@link http://fabrixjs.io/doc/trailpack/config
+ * @see {@link https://fabrix.app/docs/spools/config
  */
 export const spool = {
 
   /**
-   * API and config resources provided by this Trailpack.
+   * API and config resources provided by this Spool.
    */
   provides: {
     resources: [],
@@ -18,16 +18,16 @@ export const spool = {
   },
 
   /**
-   * Configure the lifecycle of this pack; that is, how it boots up, and which
-   * order it loads relative to other trailpacks.
+   * Configure the lifecycle of this spool; that is, how it boots up, and which
+   * order it loads relative to other spools.
    */
   lifecycle: {
     configure: {
       /**
        * List of events that must be fired before the configure lifecycle
-       * method is invoked on this Trailpack
+       * method is invoked on this Spool
        */
-      listen: [ ],
+      listen: [ 'spool:router:configured'],
 
       /**
        * List of events emitted by the configure lifecycle method
@@ -35,7 +35,7 @@ export const spool = {
       emit: [ ]
     },
     initialize: {
-      listen: [ ],
+      listen: [ 'spool:router:initialized'],
       emit: [ ]
     }
   }

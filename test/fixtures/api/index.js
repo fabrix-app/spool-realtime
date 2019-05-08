@@ -1,0 +1,1 @@
+exports.sparks = require('./sparks')
