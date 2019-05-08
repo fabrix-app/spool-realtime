@@ -8,14 +8,17 @@ module.exports = _.defaultsDeep({
   pkg: {
     name: require('../../package').name + '-test'
   },
-  api: {},
+  api: require('./api'),
   config: {
     main: {
       spools: [
         require('@fabrix/spool-router').RouterSpool,
         require('@fabrix/spool-express').ExpressSpool,
         require('../../dist').RealtimeSpool
-      ]
+      ],
+      paths: {
+        www: 'test/fixtures'
+      }
     },
     web: {
       express: require('express'),
@@ -32,20 +35,22 @@ module.exports = _.defaultsDeep({
           '404',
           '500'
         ],
-        static: require('express').static('test/static')
-      }
+        static: require('express').static('test/fixtures')
+      },
+      port: 3001
     },
     realtime: {
+      path: 'test/fixtures/primus',
       primus: {
-        redis: {
-          host: 'localhost',
-          port: 6379,
-          channel: 'primus' // Optional, defaults to `'primus`'
-        },
-        transformer: 'websockets'
+        // redis: {
+        //   host: 'localhost',
+        //   port: 6379,
+        //   channel: 'primus' // Optional, defaults to `'primus`'
+        // },
+        // transformer: 'websockets'
       },
       plugins: {
-        redis: PrimusRedisRooms
+        // redis: PrimusRedisRooms
       }
     }
   }

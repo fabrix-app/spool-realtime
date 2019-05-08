@@ -36,19 +36,27 @@ Create the config file: `config/realtime.ts `
 
 ```js
 export const realtime = {
+  prefix: null, // The prefix to use for the primus endpoint
   primus:{
     options:{
       //these options are passed directly to the Primus constructor: https://github.com/primus/primus#getting-started
     }
-  } 
+  },
+  plugins: {
+    // Plugins are a key and a library passed to primus.use
+    redis: require('primus-redis-rooms')
+  }
 }
 ```
 
 ## Client
+You can set the config path for the generated primus.js file by either setting
+
+`config.main.paths.www` (common defaults for webserver spools) or through `config.realtime.path` which should likely be to a static directory.
 
 You can include the primus client library as a script:
 ```
-<script src="/primus/primus.js"></script>
+<script src="/<realtime.path>/primus.js"></script>
 ```
 
 ## License

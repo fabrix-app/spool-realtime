@@ -1,4 +1,5 @@
 import { Spool } from '@fabrix/fabrix/dist/common'
+import { Utils as RouterUtils } from '@fabrix/spool-router'
 import * as Primus from 'primus'
 
 const primusDefaults = {
@@ -7,6 +8,7 @@ const primusDefaults = {
 
 import * as Validator from './validator'
 
+import * as api from './api/index'
 import * as config from './config/index'
 import * as pkg from '../package.json'
 
@@ -17,7 +19,7 @@ export class RealtimeSpool extends Spool {
     super(app, {
       config: config,
       pkg: pkg,
-      api: {}
+      api: api
     })
 
     this.extensions = {
@@ -61,19 +63,38 @@ export class RealtimeSpool extends Spool {
   }
 
   async initialize() {
-    const primusConfig = this.app.config.get('realtime.primus')
+
+    const isExpress = this.app.config.get('web.server') === 'express'
+    const listener = isExpress ? 'webserver:http' : 'webserver:http:ready'
+    const pathname = this.app.config.get('realtime.prefix') ? `${this.app.config.get('realtime.prefix')}/primus` : 'primus'
+
+    // The path for primus/primus.js
+    const path = this.app.config.get('realtime.path') || this.app.config.get('main.paths.www') || __dirname
+
+    const primusConfig = Object.assign(
+      {},
+      { pathname: pathname },
+      this.app.config.get('realtime.primus')
+    )
+
     const plugins = this.app.config.get('realtime.plugins') || {}
 
     return new Promise((resolve, reject) => {
-      this.app.once('webserver:http:ready', (httpServer) => {
+      this.app.once(listener, (httpServer) => {
+
         if (Array.isArray(httpServer)) {
           httpServer = httpServer[0]
         }
 
         try {
-          this._sockets = new Primus(httpServer, Object.assign(primusDefaults, primusConfig.options))
+          this._sockets = Primus(httpServer, Object.assign(
+            {},
+            primusConfig.options,
+            primusDefaults
+          ))
         }
         catch (err) {
+          this.app.log.error('Primus failed to create', err)
           reject(err)
         }
 
@@ -86,7 +107,22 @@ export class RealtimeSpool extends Spool {
           reject(err)
         }
 
-        return resolve()
+        // Attach spark connection events
+        Object.keys(this.app.sparks || {}).forEach(k => {
+          this.sockets.on('connection', this.app.sparks[k].connection)
+        })
+
+        // Attach spark disconnection events
+        Object.keys(this.app.sparks || {}).forEach(k => {
+          this.sockets.on('disconnection', this.app.sparks[k].disconnection)
+        })
+
+        this._sockets.save(path + '/primus.js', function save(err) {
+          if (err) {
+            return reject(err)
+          }
+          return resolve()
+        })
       })
     })
   }
@@ -107,6 +143,12 @@ export class RealtimeSpool extends Spool {
       .then( () => {
         if (!this._sockets) {
           throw new Error('Sockets does not exist')
+        }
+        return
+      })
+      .then( () => {
+        if (!this._sockets.Spark) {
+          throw new Error('Socket Spark does not exist')
         }
         return
       })
