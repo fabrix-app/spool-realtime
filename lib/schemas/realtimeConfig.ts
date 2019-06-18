@@ -1,5 +1,5 @@
 
-import * as joi from 'joi'
+import joi from 'joi'
 
 export const realtimeConfig =  joi.object().keys({
   path: joi.string().allow(null, ''),

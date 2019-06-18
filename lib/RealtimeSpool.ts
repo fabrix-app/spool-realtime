@@ -1,6 +1,6 @@
 import { Spool } from '@fabrix/fabrix/dist/common'
 import { Utils as RouterUtils } from '@fabrix/spool-router'
-import * as Primus from 'primus'
+import Primus from 'primus'
 
 const primusDefaults = {
   transformer: 'engine.io'
