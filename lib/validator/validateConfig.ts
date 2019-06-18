@@ -1,4 +1,4 @@
-import * as joi from 'joi'
+import joi from 'joi'
 import { realtimeConfig } from '../schemas/realtimeConfig'
 
 export const validateConfig = {
