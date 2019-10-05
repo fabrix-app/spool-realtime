@@ -8,6 +8,8 @@
 [![Dependency Status][daviddm-image]][daviddm-url]
 [![Follow @FabrixApp on Twitter][twitter-image]][twitter-url]
 
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+
 ## Getting Started
 
 ### Install
@@ -24,7 +26,7 @@ Then edit `config/main.ts `
 export const main = {
   spools: [
     require('@fabrix/spool-router').RouterSpool,
-    require('@fabrix/spool-express').ExpressSpool, // Or use a different Webserver Spool 
+    require('@fabrix/spool-express').ExpressSpool, // Or use a different Webserver Spool such as Hapi, Polka, Koa
     require('@fabrix/spool-realtime').RealtimeSpool
   ]
 }
