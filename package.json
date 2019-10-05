@@ -1,6 +1,6 @@
 {
   "name": "@fabrix/spool-realtime",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Spool: Realtime, Synchronize the client and server via WebSockets using Primus",
   "homepage": "https://fabrix.app",
   "author": {
