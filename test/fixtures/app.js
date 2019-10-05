@@ -37,7 +37,7 @@ module.exports = _.defaultsDeep({
         ],
         static: require('express').static('test/fixtures')
       },
-      port: 3001
+      port: process.env.PORT || 3001
     },
     realtime: {
       path: 'test/fixtures/primus',
