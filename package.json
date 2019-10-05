@@ -30,6 +30,7 @@
     "primus"
   ],
   "scripts": {
+    "release": "standard-version",
     "build": "tsc -p ./lib/tsconfig.release.json",
     "lint": "tslint -p ./lib",
     "watch": "tsc -w -p ./lib/tsconfig.release.json",
@@ -48,8 +49,8 @@
     "test"
   ],
   "dependencies": {
-    "engine.io": "^3.3.2",
-    "engine.io-client": "^3.3.2",
+    "engine.io": "^3.4.0",
+    "engine.io-client": "^3.4.0",
     "joi": "^14.3.1",
     "primus": "^7.3.3"
   },
@@ -61,13 +62,14 @@
     "@types/lodash": "^4.14.109",
     "@types/node": "~10.3.4",
     "assert-called": "^0.1.2-1",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "primus-redis-rooms": "^0.3.2",
-    "mocha": "^6.1.4",
+    "mocha": "^6",
     "nyc": "^14.1.1",
     "shortid": "^2.2.14",
     "smokesignals": "^3",
     "sqlite3": "^4.0.0",
+    "standard-version": "^7.0.0",
     "supertest": "^4.0.2",
     "tslib": "~1.9.0",
     "tslint": "~5.14.0",

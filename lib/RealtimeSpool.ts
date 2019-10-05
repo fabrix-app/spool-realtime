@@ -1,4 +1,4 @@
-import { Spool } from '@fabrix/fabrix/dist/common'
+import { ExtensionSpool } from '@fabrix/fabrix/dist/common/spools/extension'
 import { Utils as RouterUtils } from '@fabrix/spool-router'
 import Primus from 'primus'
 
@@ -12,7 +12,7 @@ import * as api from './api/index'
 import * as config from './config/index'
 import * as pkg from '../package.json'
 
-export class RealtimeSpool extends Spool {
+export class RealtimeSpool extends ExtensionSpool {
   private _sockets
 
   constructor(app) {
