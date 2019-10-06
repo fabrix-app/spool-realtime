@@ -37,6 +37,13 @@ describe('# Controller Integration', () => {
 
   describe('## Controller', () => {
     it('should be available in a controller', (done) => {
+
+      // client.on('data', function message(data) {
+      //   if (data.message === 'in a bottle') {
+      //     done()
+      //   }
+      // })
+
       socketUser
         .post(`/broadcast`)
         .expect(200)
@@ -44,13 +51,8 @@ describe('# Controller Integration', () => {
           message: 'in a bottle'
         })
         .end((err, res) => {
-
-          client.on('data', function message(data) {
-            if (data.message === 'in a bottle') {
-              done()
-            }
-          })
           assert.ok(res.body)
+          done()
         })
     })
   })
