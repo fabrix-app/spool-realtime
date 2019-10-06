@@ -1,6 +1,6 @@
 {
   "name": "@fabrix/spool-realtime",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Spool: Realtime, Synchronize the client and server via WebSockets using Primus",
   "homepage": "https://fabrix.app",
   "author": {
@@ -38,7 +38,8 @@
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && npm run build",
     "clean": "rm -rf dist",
-    "ci": "cd .. && ci"
+    "ci": "cd .. && ci",
+    "webpack": "node_modules/.bin/webpack --config ./test-browser/webpack.config.js"
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -63,9 +64,11 @@
     "@types/node": "~10.3.4",
     "assert-called": "^0.1.2-1",
     "express": "^4.17.1",
-    "primus-redis-rooms": "^0.3.2",
+    "fortress-maximus": "0.0.5",
+    "mirage": "0.0.7",
     "mocha": "^6",
     "nyc": "^14.1.1",
+    "primus-redis-rooms": "^0.3.2",
     "shortid": "^2.2.14",
     "smokesignals": "^3",
     "sqlite3": "^4.0.0",
@@ -75,7 +78,9 @@
     "tslint": "~5.14.0",
     "tslint-microsoft-contrib": "~6.1.0",
     "tsutils": "~3.9.1",
-    "typescript": "~3.3.4000"
+    "typescript": "~3.3.4000",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.3"
   },
   "peerDependencies": {
     "@fabrix/fabrix": "^1.6.3"
