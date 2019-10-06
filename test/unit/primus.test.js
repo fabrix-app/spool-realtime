@@ -1,3 +1,48 @@
+'use strict'
+/* global describe, it */
+const assert = require('assert')
+const supertest = require('supertest')
+const qs = require('qs')
+const _ = require('lodash')
+
+let Primus = require('primus')
+  , Socket
+  , client
+
+describe('# Primus Unit', () => {
+  let socketUser, socketLibrary
+
+  describe('## primus', () => {
+
+    before((done) => {
+      Socket = Primus.createSocket(global.app.config.get('realtime.primus'))
+      client = new Socket(`http://localhost:${global.app.config.get('web.port')}`)
+
+      client.on('open', function (spark) {
+        console.log('BRK CLIENT SPARK OPEN')
+      })
+
+      socketUser = supertest.agent(global.app.spools.express.server)
+
+      socketUser
+        .get(`/primus/primus.js`)
+        .expect(200)
+        .end((err, res) => {
+          assert.ok(res.body)
+          done(err)
+        })
+    })
+
+    // it('should stop', (done) => {
+    //   client.on('end', function (spark) {
+    //     console.log('BRK CLIENT SPARK CLOSED')
+    //     done()
+    //   })
+    //   client.end()
+    // })
+  })
+})
+
 // 'use strict'
 // /* global describe, it */
 // const assert = require('assert')

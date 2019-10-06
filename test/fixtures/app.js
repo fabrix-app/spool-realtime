@@ -20,6 +20,13 @@ module.exports = _.defaultsDeep({
         www: 'test/fixtures'
       }
     },
+    routes: {
+      '/broadcast': {
+        'POST': {
+          handler: 'TestController.broadcast'
+        }
+      }
+    },
     web: {
       express: require('express'),
       middlewares: {
@@ -37,7 +44,7 @@ module.exports = _.defaultsDeep({
         ],
         static: require('express').static('test/fixtures')
       },
-      port: process.env.PORT || 3001
+      port: process.env.PORT || 3000
     },
     realtime: {
       // The path to the primus.js file
