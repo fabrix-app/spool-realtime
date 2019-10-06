@@ -3700,6 +3700,83 @@ module.exports = Primus;
 
 },{"demolish":1,"emits":2,"eventemitter3":3,"inherits":4,"querystringify":8,"recovery":9,"tick-tock":12,"url-parse":14,"yeast":15}]},{},[16])(16)
 ;
+Primus.prototype.ark["mirage"] = function client(primus, options) {
+  primus.mirage = primus.mirage || options.mirage || '';
+
+  primus.on('mirage', function mirage(id) {
+    primus.mirage = id;
+
+    if (primus.buffer.length) {
+      var data = primus.buffer.slice()
+        , length = data.length
+        , i = 0;
+
+      primus.buffer.length = 0;
+
+      for (; i < length; i++) {
+        primus._write(data[i]);
+      }
+    }
+  });
+
+  /**
+   * Add an extra _mirage key to the URL so we can figure out we have
+   * a persistent session id or not.
+   *
+   * @param {Object} options The request options.
+   * @api private
+   */
+  primus.on('outgoing::url', function url(options) {
+    if (!primus.mirage) return;
+
+    var querystring = primus.querystring(options.query || '');
+
+    querystring._mirage = primus.mirage;
+    options.query = primus.querystringify(querystring);
+  });
+
+  /**
+   * The actual message writer.
+   *
+   * @NOTE: This function is an identical copy and paste from Primus's ._write
+   * method. The only exception is that we added a check for `primus.mirage` to
+   * determine if we are ready to write data to the server.
+   *
+   * @param {Mixed} data The message that needs to be written.
+   * @returns {Boolean} Successful write to the underlaying transport.
+   * @api private
+   */
+  primus._write = function write(data) {
+    //
+    // The connection is closed, normally this would already be done in the
+    // `spark.write` method, but as `_write` is used internally, we should also
+    // add the same check here to prevent potential crashes by writing to a dead
+    // socket.
+    //
+    if (Primus.OPEN !== primus.readyState || !primus.mirage) {
+      //
+      // If the buffer is at capacity, remove the first item.
+      //
+      if (primus.buffer.length === primus.options.queueSize) {
+        primus.buffer.splice(0, 1);
+      }
+
+      primus.buffer.push(data);
+      return false;
+    }
+
+    primus.encoder(data, function encoded(err, packet) {
+      //
+      // Do a "save" emit('error') when we fail to parse a message. We don't
+      // want to throw here as listening to errors should be optional.
+      //
+      if (err) return primus.listeners('error').length && primus.emit('error', err);
+      primus.emit('outgoing::data', packet);
+    });
+
+    return true;
+  };
+};
   return Primus;
 },
 [
