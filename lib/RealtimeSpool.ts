@@ -38,6 +38,9 @@ export class RealtimeSpool extends ExtensionSpool {
 
   }
 
+  /**
+   * Alias for _sockets for access from app.sockets
+   */
   get sockets () {
     return this._sockets
   }
@@ -65,27 +68,43 @@ export class RealtimeSpool extends ExtensionSpool {
   async initialize() {
 
     const isExpress = this.app.config.get('web.server') === 'express'
-    const listener = isExpress ? 'webserver:http' : 'webserver:http:ready'
-    const pathname = this.app.config.get('realtime.prefix') ? `${this.app.config.get('realtime.prefix')}/primus` : 'primus'
 
-    // The path for primus/primus.js
-    const path = this.app.config.get('realtime.path') || this.app.config.get('main.paths.www') || __dirname
+    // The emitted event when a server is created by common webserver spools
+    const listener = isExpress
+      ? 'webserver:http'
+      : 'webserver:http:ready'
 
+    // The path name for the sockets
+    const pathname = this.app.config.get('realtime.prefix')
+      ? `${this.app.config.get('realtime.prefix')}/primus`
+      : 'primus'
+
+    // The path for client\'s primus/primus.js
+    const path = this.app.config.get('realtime.path')
+      || this.app.config.get('main.paths.www')
+      || __dirname
+
+    // The configuration fo the Primus instance
     const primusConfig = Object.assign(
       {},
       { pathname: pathname },
       this.app.config.get('realtime.primus')
     )
 
+    // The plugins for primus to use: key/value in realtime.plugins
     const plugins = this.app.config.get('realtime.plugins') || {}
 
+    // Wrap in a promise to listen for the webserver event
     return new Promise((resolve, reject) => {
       this.app.once(listener, (httpServer) => {
 
+        // Fabrix can run more than one http server,
+        // TODO, make selecting a webserver configurable
         if (Array.isArray(httpServer)) {
           httpServer = httpServer[0]
         }
 
+        // Try creating Primus instance
         try {
           this._sockets = Primus(httpServer, Object.assign(
             {},
@@ -98,25 +117,28 @@ export class RealtimeSpool extends ExtensionSpool {
           reject(err)
         }
 
+        // Try Loading the Plugins
         try {
           Object.keys(plugins).forEach(k => {
-            this._sockets.use(k, plugins[k])
+            this._sockets.plugin(k, plugins[k])
           })
         }
         catch (err) {
           reject(err)
         }
 
-        // Attach spark connection events
+        // Attach spark connection events to all App Sparks
         Object.keys(this.app.sparks || {}).forEach(k => {
           this.sockets.on('connection', this.app.sparks[k].connection)
         })
 
-        // Attach spark disconnection events
+        // Attach spark disconnection events to all App Sparks
         Object.keys(this.app.sparks || {}).forEach(k => {
           this.sockets.on('disconnection', this.app.sparks[k].disconnection)
         })
 
+        // Create the client file on this application
+        // TODO, make configurable to serve a CDN version
         this._sockets.save(path + '/primus.js', function save(err) {
           if (err) {
             return reject(err)
@@ -131,8 +153,18 @@ export class RealtimeSpool extends ExtensionSpool {
    * Unload primus
    */
   async unload() {
-    this._sockets.destroy({ timeout: 5000 })
-    return Promise.resolve()
+    return new Promise((resolve, reject) => {
+
+      // TODO fix this
+      this.sockets.on('destroy', function () {
+        this.app.log('primus destroyed')
+        // return resolve()
+      })
+
+      // Timeout gives sockets sometime to disconnect before calling primus.end
+      this.sockets.destroy(this.app.config.get('realtime.destroy'))
+      return resolve()
+    })
   }
 
   /**

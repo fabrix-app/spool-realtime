@@ -17,6 +17,7 @@ describe('Primus', () => {
     client = new Socket(`http://localhost:${global.app.config.get('web.port')}`)
 
     socketUser = supertest.agent(global.app.spools.express.server)
+
     socketUser
       .get(`/primus/primus.js`)
       .expect(200)
@@ -28,8 +29,14 @@ describe('Primus', () => {
 
   describe('Primus utils', () => {
     it('should emit', (done) => {
+      client.on('data', function message(data) {
+        console.log('Received from TestSpark Handler', data)
+        assert.ok(data && data.pong)
+        done()
+      })
+
+      // The officiall adds us as a connection
       client.emit({data: 'hello world'})
-      done()
     })
   })
 })

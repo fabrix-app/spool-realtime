@@ -1,4 +1,4 @@
-import {FabrixGeneric as Generic, FabrixModel} from '@fabrix/fabrix/dist/common'
+import { FabrixGeneric as Generic } from '@fabrix/fabrix/dist/common'
 
 /**
  * @module Spark
