@@ -15,6 +15,7 @@ describe('# Primus Integration', () => {
   before((done) => {
     Socket = Primus.createSocket(global.app.config.get('realtime.primus'))
     client = new Socket(`http://localhost:${global.app.config.get('web.port')}`)
+    socketUser = supertest.agent(global.app.spools.express.server)
 
     client.on('data', function message(data) {
       console.log('Primus Integration BEFORE: Received from TestSpark Handler', data)
@@ -23,8 +24,6 @@ describe('# Primus Integration', () => {
     client.on('error', function error(err) {
       console.error('Primus Integration BEFORE ERROR:', err, err.message);
     })
-
-    socketUser = supertest.agent(global.app.spools.express.server)
 
     socketUser
       .get(`/primus/primus.js`)
@@ -40,11 +39,15 @@ describe('# Primus Integration', () => {
 
       client.on('data', function message(data) {
         if (data && data.pong) {
-          done()
+          // done()
         }
       })
 
-      client.write({data: 'hello world'})
+      assert.ok(client.write({data: 'hello world'}))
+
+      setTimeout(function(){
+        done()
+      }, 100 )
     })
 
     it('should write from client to server', (done) => {

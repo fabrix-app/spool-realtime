@@ -38,8 +38,8 @@ module.exports = class TestSpark extends Spark {
 
     // Test writing to spark
     spark.write({ pong: false })
-    spark.write({ pong: true })
     spark.write({ ping: false })
+    spark.write({ pong: true })
   }
 
   disconnection(spark) {
