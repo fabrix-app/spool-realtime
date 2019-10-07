@@ -47,11 +47,11 @@ module.exports = _.defaultsDeep({
       port: process.env.PORT || 3000
     },
     realtime: {
-      // The path to the primus.js file
+      // The path to save the primus.js
       path: 'test/fixtures/primus',
       // The configuration for the primus instance
       primus: {
-        fortress: 'spark',
+        // fortress: 'spark',
         'mirage timeout': 5000
         // redis: {
         //   host: 'localhost',
@@ -62,7 +62,7 @@ module.exports = _.defaultsDeep({
       },
       // Plugins for Primus.use
       plugins: {
-        'fortress maximus': require('fortress-maximus'),
+        // 'fortress maximus': require('fortress-maximus'),
         'mirage': require('mirage')
         // redis: PrimusRedisRooms
       }

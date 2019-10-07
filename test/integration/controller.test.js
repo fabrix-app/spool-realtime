@@ -13,7 +13,9 @@ describe('# Controller Integration', () => {
   let socketUser, socketLibrary
 
   before((done) => {
-    Socket = Primus.createSocket(global.app.config.get('realtime.primus'))
+    Socket = Primus.createSocket({
+      transformer: 'engine.io'
+    })
     client = new Socket(`http://localhost:${global.app.config.get('web.port')}`)
 
     client.on('data', function message(data) {

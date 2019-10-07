@@ -75,14 +75,20 @@ export class RealtimeSpool extends ExtensionSpool {
       : 'webserver:http:ready'
 
     // The path name for the sockets
+    // Servers will connect at https://myserver.com/<path>/primus
     const pathname = this.app.config.get('realtime.prefix')
       ? `${this.app.config.get('realtime.prefix')}/primus`
       : 'primus'
 
+    this.app.log.debug('Realtime: Primus Socket Path:', `/${pathname}`)
+
     // The path for client\'s primus/primus.js
+    // Uses either the main www path, or the one supplied in the config.realtime.path
     const path = this.app.config.get('realtime.path')
       || this.app.config.get('main.paths.www')
       || __dirname
+
+    this.app.log.debug('Realtime: Primus JS Path:', `/${path}/primus.js`)
 
     // The configuration fo the Primus instance
     const primusConfig = Object.assign(
@@ -129,12 +135,37 @@ export class RealtimeSpool extends ExtensionSpool {
 
         // Attach spark connection events to all App Sparks
         Object.keys(this.app.sparks || {}).forEach(k => {
-          this.sockets.on('connection', this.app.sparks[k].connection)
-        })
+          this._sockets.on('connection', this.app.sparks[k].connection)
 
-        // Attach spark disconnection events to all App Sparks
-        Object.keys(this.app.sparks || {}).forEach(k => {
-          this.sockets.on('disconnection', this.app.sparks[k].disconnection)
+          if (this.app.sparks[k].data) {
+            this._sockets.on('incoming::data', this.app.sparks[k].data)
+          }
+
+          if (this.app.sparks[k].initialised) {
+            this._sockets.on('initialised', this.app.sparks[k].initialised)
+          }
+
+          if (this.app.sparks[k].plugin) {
+            this._sockets.on('plugin', this.app.sparks[k].plugin)
+          }
+
+          if (this.app.sparks[k].plugout) {
+            this._sockets.on('plugout', this.app.sparks[k].plugout)
+          }
+
+          if (this.app.sparks[k].log) {
+            this._sockets.on('log', this.app.sparks[k].log)
+          }
+
+          if (this.app.sparks[k].end) {
+            this._sockets.on('end', this.app.sparks[k].end)
+          }
+
+          if (this.app.sparks[k].close) {
+            this._sockets.on('close', this.app.sparks[k].close)
+          }
+
+          this._sockets.on('disconnection', this.app.sparks[k].disconnection)
         })
 
         // Create the client file on this application
