@@ -3,6 +3,7 @@
 const Spark = require('../../../../dist').Spark
 
 module.exports = class TestSpark extends Spark {
+
   listen(spark) {
     spark.on('data', function (data) {
       console.log('TEST client message', data)
@@ -12,12 +13,31 @@ module.exports = class TestSpark extends Spark {
   }
 
 
+  data(spark) {
+    console.log('TEST data', spark)
+    console.log('data has the following headers', spark.headers)
+    console.log('data was made from', spark.address)
+    console.log('data id', spark.id)
+  }
+
+  plugin(spark) {
+    console.log('TEST plugin', spark)
+  }
+
+  plugout(spark) {
+    console.log('TEST plugout', spark)
+  }
+
+  end(spark) {
+    console.log('TEST end', spark)
+  }
+
   connection(spark) {
     // On Each Connection we will tell the client to pong
     // console.log('TEST connection', spark, spark.headers, spark.address)
 
     // console.log('TEST id', spark.id, spark)
-
+    console.log('TEST connection', spark)
     console.log('connection has the following headers', spark.headers)
     console.log('connection was made from', spark.address)
     console.log('connection id', spark.id)

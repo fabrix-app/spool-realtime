@@ -47,7 +47,7 @@ module.exports = _.defaultsDeep({
       port: process.env.PORT || 3000
     },
     realtime: {
-      // The path to the primus.js file
+      // The path to save the primus.js
       path: 'test/fixtures/primus',
       // The configuration for the primus instance
       primus: {

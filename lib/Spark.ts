@@ -23,10 +23,26 @@ export class Spark extends Generic {
     return this._sparks.delete(key)
   }
 
+  /**
+   * When a connection starts from a client, the spark will be here
+   * @param spark
+   */
   connection(spark) {
     throw new Error('Connection should be overwritten by sub class!')
   }
 
+  /**
+   * When a connection sends data, it's the responisbility of the Spark class to filter it.
+   * @param spark
+   */
+  data(spark) {
+    throw new Error('Data should be overwritten by sub class!')
+  }
+
+  /**
+   * When a connection is lost from a client, the spark will be here
+   * @param spark
+   */
   disconnection(spark) {
     throw new Error('Disconnection should be overwritten by sub class!')
   }
