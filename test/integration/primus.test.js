@@ -51,8 +51,9 @@ describe('# Primus Integration', () => {
     })
 
     it('should write from client to server', (done) => {
-      // console.log(client.socket.emit('data', 'test'))
-      assert.ok(client.write({ message: 'from a bottle'}))
+      console.log(client.socket.emit({ message: 'from a bottle 1'}))
+      console.log(client.emit({ message: 'from a bottle 2'}))
+      console.log(client.write({ message: 'from a bottle 3'}))
       done()
       // client.send('find', 'messages', { status: 'read', user: 10 }, (error, data) => {
       //   console.log('Found all messages', data)

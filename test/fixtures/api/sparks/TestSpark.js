@@ -28,6 +28,10 @@ module.exports = class TestSpark extends Spark {
     console.log('TEST plugout', spark)
   }
 
+  close(spark) {
+    console.log('TEST close', spark)
+  }
+
   end(spark) {
     console.log('TEST end', spark)
   }
@@ -50,6 +54,10 @@ module.exports = class TestSpark extends Spark {
     spark.on('data', function(data) {
       console.log('PRINTED FROM SERVER:', data)
       spark.write('Server Received')
+    })
+
+    spark.on('error', function(err) {
+      console.log('ERROR PRINTED FROM SERVER:', err)
     })
 
     spark.on('heartbeat', function() {

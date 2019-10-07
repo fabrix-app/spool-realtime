@@ -137,8 +137,9 @@ export class RealtimeSpool extends ExtensionSpool {
         Object.keys(this.app.sparks || {}).forEach(k => {
           this.sockets.on('connection', this.app.sparks[k].connection)
 
-          this.sockets.on('data', this.app.sparks[k].data)
-
+          if (this.app.sparks[k].data) {
+            this.sockets.on('incoming::data', this.app.sparks[k].data)
+          }
 
           if (this.app.sparks[k].initialised) {
             this.sockets.on('initialised', this.app.sparks[k].initialised)
@@ -158,6 +159,10 @@ export class RealtimeSpool extends ExtensionSpool {
 
           if (this.app.sparks[k].end) {
             this.sockets.on('end', this.app.sparks[k].end)
+          }
+
+          if (this.app.sparks[k].close) {
+            this.sockets.on('close', this.app.sparks[k].close)
           }
 
           this.sockets.on('disconnection', this.app.sparks[k].disconnection)
