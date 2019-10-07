@@ -135,37 +135,37 @@ export class RealtimeSpool extends ExtensionSpool {
 
         // Attach spark connection events to all App Sparks
         Object.keys(this.app.sparks || {}).forEach(k => {
-          this.sockets.on('connection', this.app.sparks[k].connection)
+          this._sockets.on('connection', this.app.sparks[k].connection)
 
           if (this.app.sparks[k].data) {
-            this.sockets.on('incoming::data', this.app.sparks[k].data)
+            this._sockets.on('incoming::data', this.app.sparks[k].data)
           }
 
           if (this.app.sparks[k].initialised) {
-            this.sockets.on('initialised', this.app.sparks[k].initialised)
+            this._sockets.on('initialised', this.app.sparks[k].initialised)
           }
 
           if (this.app.sparks[k].plugin) {
-            this.sockets.on('plugin', this.app.sparks[k].plugin)
+            this._sockets.on('plugin', this.app.sparks[k].plugin)
           }
 
           if (this.app.sparks[k].plugout) {
-            this.sockets.on('plugout', this.app.sparks[k].plugout)
+            this._sockets.on('plugout', this.app.sparks[k].plugout)
           }
 
           if (this.app.sparks[k].log) {
-            this.sockets.on('log', this.app.sparks[k].log)
+            this._sockets.on('log', this.app.sparks[k].log)
           }
 
           if (this.app.sparks[k].end) {
-            this.sockets.on('end', this.app.sparks[k].end)
+            this._sockets.on('end', this.app.sparks[k].end)
           }
 
           if (this.app.sparks[k].close) {
-            this.sockets.on('close', this.app.sparks[k].close)
+            this._sockets.on('close', this.app.sparks[k].close)
           }
 
-          this.sockets.on('disconnection', this.app.sparks[k].disconnection)
+          this._sockets.on('disconnection', this.app.sparks[k].disconnection)
         })
 
         // Create the client file on this application

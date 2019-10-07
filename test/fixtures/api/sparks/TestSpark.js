@@ -6,9 +6,20 @@ module.exports = class TestSpark extends Spark {
 
   listen(spark) {
     spark.on('data', function (data) {
-      console.log('TEST client message', data)
-      spark.write({ ping: true })
+      console.log('TEST client message', spark.id, data)
+      if (data.ping) {
+        spark.write({pong: true})
+      }
     })
+
+    spark.on('error', function(err) {
+      console.log(spark.id, 'ERROR PRINTED FROM SERVER:', err)
+    })
+
+    spark.on('heartbeat', function() {
+      console.log(spark.id, 'hearbeat...')
+    })
+
     return spark
   }
 
@@ -50,19 +61,6 @@ module.exports = class TestSpark extends Spark {
 
     // Test adding a listener
     this.listen(spark)
-
-    spark.on('data', function(data) {
-      console.log('PRINTED FROM SERVER:', data)
-      spark.write('Server Received')
-    })
-
-    spark.on('error', function(err) {
-      console.log('ERROR PRINTED FROM SERVER:', err)
-    })
-
-    spark.on('heartbeat', function() {
-      console.log(spark.id, 'hearbeat...')
-    })
 
     // Test writing to spark
     spark.write({ pong: false })
