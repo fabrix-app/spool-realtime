@@ -56,9 +56,10 @@
     "primus": "^7.3.3"
   },
   "devDependencies": {
-    "@fabrix/fabrix": "^1.6.3",
+    "@fabrix/fabrix": "^1.6.4",
     "@fabrix/lint": "^1.0.0-alpha.3",
-    "@fabrix/spool-express": "^1.6.3",
+    "@fabrix/spool-errors": "^1.6.2",
+    "@fabrix/spool-express": "^1.6.7",
     "@fabrix/spool-router": "^1.6.2",
     "@types/lodash": "^4.14.109",
     "@types/node": "~10.3.4",
@@ -83,7 +84,7 @@
     "webpack-cli": "^3.3.3"
   },
   "peerDependencies": {
-    "@fabrix/fabrix": "^1.6.3"
+    "@fabrix/fabrix": "^1.6.4"
   },
   "engines": {
     "node": ">= 7.6.0"

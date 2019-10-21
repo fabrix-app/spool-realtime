@@ -32,7 +32,7 @@ export class Spark extends Generic {
   }
 
   /**
-   * When a connection sends data, it's the responisbility of the Spark class to filter it.
+   * When a connection sends data, it's the responsibility of the Spark class to filter it.
    * @param spark
    */
   data(spark) {

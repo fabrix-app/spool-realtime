@@ -14,7 +14,9 @@ describe('# Primus Integration', () => {
 
   before((done) => {
     Socket = Primus.createSocket({
-      transformer: 'engine.io'
+      transformer: 'engine.io',
+      // ...global.app.config.get('realtime.primus'),
+      // plugin: global.app.config.get('realtime.plugins')
     })
     client = new Socket(`http://localhost:${global.app.config.get('web.port')}`)
     socketUser = supertest.agent(global.app.spools.express.server)

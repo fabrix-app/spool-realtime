@@ -1,16 +1,17 @@
 import { ExtensionSpool } from '@fabrix/fabrix/dist/common/spools/extension'
-import { Utils as RouterUtils } from '@fabrix/spool-router'
+import { SanityError } from '@fabrix/fabrix/dist/errors'
+
+import * as api from './api/index'
+import * as config from './config/index'
+import * as pkg from '../package.json'
+
+import * as Validator from './validator'
+
 import Primus from 'primus'
 
 const primusDefaults = {
   transformer: 'engine.io'
 }
-
-import * as Validator from './validator'
-
-import * as api from './api/index'
-import * as config from './config/index'
-import * as pkg from '../package.json'
 
 export class RealtimeSpool extends ExtensionSpool {
   private _sockets
@@ -100,6 +101,8 @@ export class RealtimeSpool extends ExtensionSpool {
     // The plugins for primus to use: key/value in realtime.plugins
     const plugins = this.app.config.get('realtime.plugins') || {}
 
+    this.app.emit('sockets:starting')
+
     // Wrap in a promise to listen for the webserver event
     return new Promise((resolve, reject) => {
       this.app.once(listener, (httpServer) => {
@@ -178,6 +181,10 @@ export class RealtimeSpool extends ExtensionSpool {
         })
       })
     })
+      .then(() => {
+        this.app.emit('sockets:ready', this._sockets)
+        return
+      })
   }
 
   /**
@@ -186,9 +193,11 @@ export class RealtimeSpool extends ExtensionSpool {
   async unload() {
     return new Promise((resolve, reject) => {
 
+      this.app.emit('sockets:stopping', this._sockets)
+
       // TODO fix this
       this.sockets.on('destroy', function () {
-        this.app.log('primus destroyed')
+        this.app.log.debug('primus destroyed')
         // return resolve()
       })
 
@@ -205,13 +214,13 @@ export class RealtimeSpool extends ExtensionSpool {
     return Promise.resolve()
       .then( () => {
         if (!this._sockets) {
-          throw new Error('Sockets does not exist')
+          throw new SanityError('Sockets does not exist')
         }
         return
       })
       .then( () => {
         if (!this._sockets.Spark) {
-          throw new Error('Socket Spark does not exist')
+          throw new SanityError('Socket Spark does not exist')
         }
         return
       })
