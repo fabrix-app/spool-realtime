@@ -57,7 +57,7 @@ export class RealtimeSpool extends ExtensionSpool {
 
     const spools = Object.keys(this.app.spools)
 
-    if (!spools.some(v => requiredSpools.indexOf(v) >= 0)) {
+    if (!spools.some(v => requiredSpools.indexOf(v) === -1)) {
       return Promise.reject(new Error(`spool-realtime requires spools: ${ requiredSpools.join(', ') }!`))
     }
 

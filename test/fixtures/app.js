@@ -13,6 +13,7 @@ module.exports = _.defaultsDeep({
     main: {
       spools: [
         require('@fabrix/spool-router').RouterSpool,
+        require('@fabrix/spool-errors').ErrorsSpool,
         require('@fabrix/spool-express').ExpressSpool,
         require('../../dist').RealtimeSpool
       ],

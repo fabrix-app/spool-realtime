@@ -1,1 +1,3 @@
-export const errors = {}
+export const errors = {
+  //
+}
