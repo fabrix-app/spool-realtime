@@ -50,7 +50,7 @@
     "test"
   ],
   "dependencies": {
-    "engine.io": "^3.4.0",
+    "engine.io": "^4.1.2",
     "engine.io-client": "^3.4.0",
     "joi": "^14.3.1",
     "primus": "^7.3.3"
