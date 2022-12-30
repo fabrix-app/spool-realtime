@@ -67,7 +67,7 @@
     "express": "^4.17.1",
     "fortress-maximus": "0.0.5",
     "mirage": "0.0.7",
-    "mocha": "^6",
+    "mocha": "^10",
     "nyc": "^14.1.1",
     "primus-redis-rooms": "^0.3.2",
     "shortid": "^2.2.14",
